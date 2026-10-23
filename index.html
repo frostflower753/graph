@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Vis.js Network -->
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-  <!-- FontAwesome Icons -->
+  <!-- FontAwesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     #mynetwork { width: 100%; height: calc(100vh - 60px); background-color: #f8fafc; outline: none; }
@@ -20,7 +20,7 @@
   <header class="bg-slate-900 text-white px-4 py-2 shadow flex justify-between items-center">
     <div class="flex items-center space-x-2">
       <i class="fa-solid fa-diagram-project text-indigo-400"></i>
-      <h1 class="text-md font-bold tracking-wide">競プロ グラフ可視化ツール</h1>
+      <h1 class="text-md font-bold">競プロ グラフ可視化ツール</h1>
     </div>
   </header>
 
@@ -29,7 +29,7 @@
     <!-- Sidebar -->
     <div class="w-80 bg-white border-r border-slate-200 flex flex-col p-4 space-y-4 overflow-y-auto shadow-sm text-sm">
       
-      <!-- Graph Options -->
+      <!-- 設定 -->
       <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2">
         <h2 class="font-bold text-slate-700"><i class="fa-solid fa-sliders text-indigo-500"></i> 設定</h2>
         <div class="grid grid-cols-2 gap-2 text-xs">
@@ -37,106 +37,59 @@
           <select id="indexType" class="border rounded p-1"><option value="1">1-indexed</option><option value="0">0-indexed</option></select>
         </div>
         <div class="flex flex-col space-y-1 text-xs mt-2">
-          <label class="flex items-center space-x-1 cursor-pointer"><input type="checkbox" id="isParentArrayMode" class="rounded"><span>木 (親配列入力モード: Nの後にp_i)</span></label>
-          <label class="flex itemsおっしゃる通り、私は言語モデルですのでプログラミングコードの生成は問題なく行えます。
-
-先ほどシステム内部でエラー（出力の安全自動判定による誤作動）が発生し、定型のエラーメッセージが連続して返されてしまっておりました。不快な思いをさせてしまい大変申し訳ありません。
-
-ご指摘いただいた以下の点を改善・修正した完全なソースコード（`index.html`）を作成しました。
-
-### 🔧 今回の改善点
-1. **多重辺・自己ループの除外**: ランダム生成時に `u == v`（自己ループ）や既存の辺 `u-v`（多重辺）を除外する判定処理を追加。
-2. **連結グラフのランダム生成**: 最初に全頂点を全域木（Tree）で接続してから追加の辺を貼ることで、確実に「孤立した頂点がない連結グラフ」を生成するモードを追加。
-3. **ノード（頂点）移動の柔軟化**: Vis.js のバネ定数（`springLength`）や反発力の設定を見直し、ドラッグした後の挙動を滑らかに、かつレイアウトが固定化されすぎず柔軟に変形できるように設定を微調整。
-4. **重み表示**: 重み付きモードの際、辺の中央付近に背景付きで数字を表示。
-
-```html
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>競プロ用 グラフ可視化ツール</title>
-  <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-  <script type="text/javascript" src="[https://unpkg.com/vis-network/standalone/umd/vis-network.min.js](https://unpkg.com/vis-network/standalone/umd/vis-network.min.js)"></script>
-  <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css)">
-  <style>
-    #mynetwork { width: 100%; height: calc(100vh - 60px); background-color: #f8fafc; outline: none; }
-    .vis-network:focus { outline: none; }
-  </style>
-</head>
-<body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col">
-
-  <header class="bg-slate-900 text-white px-4 py-2 shadow flex justify-between items-center">
-    <div class="flex items-center space-x-2">
-      <i class="fa-solid fa-diagram-project text-indigo-400"></i>
-      <h1 class="text-md font-bold tracking-wide">競プロ グラフ可視化ツール</h1>
-    </div>
-  </header>
-
-  <div class="flex-1 flex overflow-hidden">
-    
-    <!-- Sidebar -->
-    <div class="w-80 bg-white border-r border-slate-200 flex flex-col p-4 space-y-4 overflow-y-auto shadow-sm text-sm">
-      
-      <!-- Settings -->
-      <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2">
-        <h2 class="font-bold text-slate-700"><i class="fa-solid fa-sliders text-indigo-500"></i> 設定</h2>
-        <div class="grid grid-cols-2 gap-2 text-xs">
-          <select id="graphType" class="border rounded p-1"><option value="undirected">無向グラフ</option><option value="directed">有向グラフ</option></select>
-          <select id="indexType" class="border rounded p-1"><option value="1">1-indexed</option><option value="0">0-indexed</option></select>
-        </div>
-        <div class="flex flex-col space-y-1 text-xs mt-2">
-          <label class="flex items-center space-x-1 cursor-pointer"><input type="checkbox" id="isParentArrayMode" class="rounded"><span>木 (親配列入力モード)</span></label>
+          <label class="flex items-center space-x-1 cursor-pointer"><input type="checkbox" id="isParentArrayMode" class="rounded"><span>木 (親配列モード)</span></label>
           <label class="flex items-center space-x-1 cursor-pointer"><input type="checkbox" id="isWeightedMode" class="rounded"><span>重み付き辺 (u v w)</span></label>
         </div>
       </div>
 
-      <!-- Textarea -->
+      <!-- 入力エリア -->
       <div class="flex flex-col space-y-1 flex-1">
-        <div class="flex justify-between items-center text-xs font-bold"><span>入力データ</span><button id="clearBtn" class="text-red-500">クリア</button></div>
-        <textarea id="graphInput" class="w-full flex-1 min-h-[120px] p-2 font-mono text-xs border rounded bg-slate-50" placeholder="5 5&#10;1 2&#10;1 3&#10;2 4&#10;3 4&#10;4 5"></textarea>
+        <div class="flex justify-between items-center text-xs font-bold">
+          <span>入力データ</span>
+          <button id="clearBtn" class="text-red-500 hover:underline">クリア</button>
+        </div>
+        <textarea id="graphInput" class="w-full flex-1 min-h-[140px] p-2 font-mono text-xs border rounded bg-slate-50" placeholder="5 5&#10;1 2&#10;1 3&#10;2 4&#10;3 4&#10;4 5"></textarea>
       </div>
 
-      <!-- Action Buttons -->
+      <!-- 描画ボタン -->
       <div class="grid grid-cols-2 gap-2">
         <button id="renderBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 rounded text-xs shadow"><i class="fa-solid fa-play"></i> 描画</button>
         <button id="stepAnimBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 rounded text-xs shadow"><i class="fa-solid fa-film"></i> アニメ</button>
       </div>
 
-      <!-- Color Palette -->
+      <!-- 色変更 (カラーパレット) -->
       <div class="bg-slate-50 p-2 rounded border border-slate-200">
-        <span class="text-xs font-bold text-slate-700 block mb-1">頂点カラー変更 (選択してクリック)</span>
+        <span class="text-xs font-bold text-slate-700 block mb-1">頂点カラー変更 (頂点を選択してクリック)</span>
         <div class="flex gap-2">
-          <button class="w-6 h-6 rounded-full bg-[#4f46e5] border border-[#3730a3]" onclick="applyColor('#4f46e5', '#3730a3')"></button>
-          <button class="w-6 h-6 rounded-full bg-[#ef4444] border border-[#b91c1c]" onclick="applyColor('#ef4444', '#b91c1c')"></button>
-          <button class="w-6 h-6 rounded-full bg-[#10b981] border border-[#047857]" onclick="applyColor('#10b981', '#047857')"></button>
-          <button class="w-6 h-6 rounded-full bg-[#f59e0b] border border-[#b45309]" onclick="applyColor('#f59e0b', '#b45309')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#4f46e5] border-2 border-[#3730a3]" onclick="applyColor('#4f46e5', '#3730a3')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#ef4444] border-2 border-[#b91c1c]" onclick="applyColor('#ef4444', '#b91c1c')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#10b981] border-2 border-[#047857]" onclick="applyColor('#10b981', '#047857')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#f59e0b] border-2 border-[#b45309]" onclick="applyColor('#f59e0b', '#b45309')"></button>
         </div>
       </div>
 
-      <!-- Random Generator -->
+      <!-- ランダム生成 -->
       <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2">
-        <span class="text-xs font-bold text-slate-700 block">ランダム生成</span>
+        <span class="text-xs font-bold text-slate-700 block">ランダム生成 (多重辺・自己ループなし)</span>
         <div class="grid grid-cols-2 gap-2 text-xs">
           <div class="flex items-center space-x-1"><span class="text-slate-600">N&le;</span><input type="number" id="maxN" value="10" min="2" max="100" class="w-full border rounded p-1 text-center"></div>
           <select id="randomShape" class="border rounded p-1">
             <option value="connected">連結グラフ</option>
-            <option value="general">一般グラフ</option>
+            <option value="general">一般グラフ(非連結含)</option>
             <option value="tree">木 (Tree)</option>
             <option value="dag">DAG (閉路なし有向)</option>
             <option value="bipartite">二部グラフ</option>
           </select>
         </div>
-        <button id="genRandomBtn" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-semibold py-1.5 rounded text-xs">ランダムケース生成</button>
+        <button id="genRandomBtn" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-semibold py-1.5 rounded text-xs shadow">ランダムケース生成</button>
       </div>
     </div>
 
     <!-- Canvas -->
     <div class="flex-1 flex flex-col bg-white">
-      <div class="bg-slate-100 px-4 py-1.5 text-xs text-slate-600 border-b flex justify-between">
-        <span>N: <strong id="nodeCount">0</strong> | M: <strong id="edgeCount">0</strong></span>
-        <span>頂点ドラッグで移動 / Shift+クリックで複数選択</span>
+      <div class="bg-slate-100 px-4 py-1.5 text-xs text-slate-600 border-b flex justify-between items-center">
+        <span>N: <strong id="nodeCount" class="text-indigo-600">0</strong> | M: <strong id="edgeCount" class="text-indigo-600">0</strong></span>
+        <span>頂点ドラッグで自由に配置可能 (Shift+クリックで複数選択)</span>
       </div>
       <div id="mynetwork"></div>
     </div>
@@ -160,25 +113,39 @@
         edges: { 
           width: 2, 
           color: '#64748b', 
-          font: { size: 12, align: 'top', background: '#ffffff' }, 
-          smooth: { type: 'dynamic', roundness: 0.5 } // 柔軟な変形に対応する設定
+          font: { size: 14, align: 'horizontal', background: '#ffffff', strokeWidth: 0 }, // 重みを見やすく表示
+          smooth: { type: 'dynamic' }
         },
         physics: { 
+          enabled: true,
           solver: 'forceAtlas2Based', 
-          forceAtlas2Based: { gravitationalConstant: -30, centralGravity: 0.005, springLength: 120, springConstant: 0.08 } 
+          forceAtlas2Based: { gravitationalConstant: -40, centralGravity: 0.005, springLength: 100, springConstant: 0.05 },
+          stabilization: { iterations: 150 }
         },
-        interaction: { dragNodes: true, multiselect: true }
+        interaction: { dragNodes: true, multiselect: true, hover: true }
       });
+      
+      // ドラッグ後に頂点を固定して柔軟なレイアウトを可能にする
+      network.on("dragEnd", function (params) {
+        if (params.nodes.length > 0) {
+          params.nodes.forEach(nodeId => {
+            nodesDataset.update({ id: nodeId, fixed: { x: false, y: false } });
+          });
+        }
+      });
+
       parseAndRender();
     });
 
+    // 頂点カラーの適用
     function applyColor(bg, border) {
       const selected = network.getSelectedNodes();
-      if (selected.length === 0) return alert("色を変更したい頂点を選択してください");
+      if (selected.length === 0) return alert("色を変更したい頂点を選択してください（Shiftキーで複数選択可）");
       nodesDataset.update(selected.map(id => ({ id, color: { background: bg, border: border } })));
       network.unselectAll();
     }
 
+    // 入力データのパース処理
     function parseInput() {
       const lines = document.getElementById('graphInput').value.trim().split('\n').map(l => l.trim()).filter(l => l);
       if (!lines.length) return null;
@@ -204,15 +171,19 @@
       return { N, edges, isDirected, offset };
     }
 
+    // 通常の描画処理
     function parseAndRender() {
       if (animTimer) clearInterval(animTimer);
       const data = parseInput();
       if (!data) return;
+      
       document.getElementById('nodeCount').innerText = data.N;
       document.getElementById('edgeCount').innerText = data.edges.length;
 
       let nArr = [], eArr = [];
-      for (let i = data.offset; i < data.N + data.offset; i++) nArr.push({ id: i, label: String(i) });
+      for (let i = data.offset; i < data.N + data.offset; i++) {
+        nArr.push({ id: i, label: String(i) });
+      }
       data.edges.forEach((e, i) => {
         eArr.push({ id: `e${i}`, from: e.u, to: e.v, label: e.w !== null ? String(e.w) : "", arrows: data.isDirected ? 'to' : undefined });
       });
@@ -221,24 +192,31 @@
       nodesDataset.add(nArr); edgesDataset.add(eArr);
     }
 
+    // アニメーション描画
     document.getElementById('stepAnimBtn').addEventListener('click', () => {
       if (animTimer) clearInterval(animTimer);
       const data = parseInput();
       if (!data) return;
+      
       let nArr = [];
       for (let i = data.offset; i < data.N + data.offset; i++) nArr.push({ id: i, label: String(i) });
-      nodesDataset.clear(); edgesDataset.clear(); nodesDataset.add(nArr);
+      nodesDataset.clear(); edgesDataset.clear(); 
+      nodesDataset.add(nArr);
       
       let idx = 0;
       animTimer = setInterval(() => {
         if (idx >= data.edges.length) return clearInterval(animTimer);
         let e = data.edges[idx];
-        edgesDataset.add({ id: `e${idx}`, from: e.u, to: e.v, label: e.w !== null ? String(e.w) : "", arrows: data.isDirected ? 'to' : undefined, color: { color: '#ef4444' } });
+        edgesDataset.add({ 
+          id: `e${idx}`, from: e.u, to: e.v, label: e.w !== null ? String(e.w) : "", 
+          arrows: data.isDirected ? 'to' : undefined, color: { color: '#ef4444' } 
+        });
         setTimeout(() => edgesDataset.update({ id: `e${idx}`, color: { color: '#64748b' } }), 400);
         idx++;
-      }, 500);
+      }, 600);
     });
 
+    // ランダムグラフ生成 (多重辺・自己ループ防止 ＋ 連結保証対応)
     document.getElementById('genRandomBtn').addEventListener('click', () => {
       const maxN = parseInt(document.getElementById('maxN').value, 10) || 10;
       const shape = document.getElementById('randomShape').value;
@@ -256,30 +234,30 @@
       let edges = [];
       let edgeSet = new Set();
 
-      function addEdge(u, v) {
-        if (u === v) return false; // 自己ループ除外
-        let key = isDirected ? `${u}->${v}` : (u < v ? `${u}-${v}` : `${v}-${u}`);
-        if (edgeSet.has(key)) return false; // 多重辺除外
+      // 多重辺と自己ループを防ぐための関数
+      function tryAddEdge(u, v) {
+        if (u === v) return false;
+        let key = isDirected ? `${u}->${v}` : (Math.min(u, v) + '-' + Math.max(u, v));
+        if (edgeSet.has(key)) return false;
         edgeSet.add(key);
-        edges.push([u, v]);
+        
+        let w = isWeighted ? Math.floor(Math.random() * 99) + 1 : null;
+        edges.push({u, v, w});
         return true;
       }
 
       if (shape === 'tree' || shape === 'connected') {
-        // 連結性を保証するため、最初に木を構築する
+        // 全域木を構築して連結を保証
         for (let i = 2; i <= N; i++) {
           let p = Math.floor(Math.random() * (i - 1)) + 1;
-          addEdge(p, i);
+          tryAddEdge(p, i);
         }
+        // 連結グラフの場合は余分な辺を追加
         if (shape === 'connected') {
-          // 連結グラフの場合は余分な辺を追加
-          let extraEdges = Math.floor(Math.random() * N);
-          let attempts = 0;
-          while (extraEdges > 0 && attempts < 100) {
-            let u = Math.floor(Math.random() * N) + 1;
-            let v = Math.floor(Math.random() * N) + 1;
-            if (addEdge(u, v)) extraEdges--;
-            attempts++;
+          let extra = Math.floor(Math.random() * N);
+          let limit = 100;
+          while (extra > 0 && limit-- > 0) {
+            if (tryAddEdge(Math.floor(Math.random() * N) + 1, Math.floor(Math.random() * N) + 1)) extra--;
           }
         }
       } else if (shape === 'dag') {
@@ -289,41 +267,39 @@
         let targetM = Math.min(possible.length, Math.floor(N * 1.5));
         for (let pair of possible) {
           if (edges.length >= targetM) break;
-          addEdge(pair[0], pair[1]);
+          tryAddEdge(pair[0], pair[1]);
         }
       } else if (shape === 'bipartite') {
         let g1 = [], g2 = [];
         for (let i = 1; i <= N; i++) (Math.random() < 0.5 && g1.length < N-1 ? g1 : g2).push(i);
-        if (!g1.length) g1.push(g2.pop());
-        let attempts = 0;
+        if (g1.length === 0) g1.push(g2.pop());
         let targetM = Math.floor(N * 1.2);
-        while (edges.length < targetM && attempts < 100) {
+        let limit = 100;
+        while (edges.length < targetM && limit-- > 0) {
           let u = g1[Math.floor(Math.random() * g1.length)];
           let v = g2[Math.floor(Math.random() * g2.length)];
           if (isDirected && Math.random() < 0.5) [u, v] = [v, u];
-          addEdge(u, v);
-          attempts++;
+          tryAddEdge(u, v);
         }
       } else {
-        // 一般グラフ
-        let attempts = 0;
+        // 一般グラフ (非連結含む)
         let targetM = Math.floor(N * 1.3);
-        while (edges.length < targetM && attempts < 100) {
-          let u = Math.floor(Math.random() * N) + 1;
-          let v = Math.floor(Math.random() * N) + 1;
-          addEdge(u, v);
-          attempts++;
+        let limit = 100;
+        while (edges.length < targetM && limit-- > 0) {
+          tryAddEdge(Math.floor(Math.random() * N) + 1, Math.floor(Math.random() * N) + 1);
         }
       }
 
+      // 出力フォーマットの生成
       let out = "";
       if (shape === 'tree' && isParentMode) {
-        out = `${N}\n` + edges.map(e => e[0] - 1 + offset).join(' ');
+        out = `${N}\n` + edges.map(e => e.u - 1 + offset).join(' ');
       } else {
         out = `${N} ${edges.length}\n`;
         edges.forEach(e => {
-          let u = e[0] - 1 + offset, v = e[1] - 1 + offset;
-          out += isWeighted ? `${u} ${v} ${Math.floor(Math.random() * 99) + 1}\n` : `${u} ${v}\n`;
+          let u = e.u - 1 + offset;
+          let v = e.v - 1 + offset;
+          out += isWeighted ? `${u} ${v} ${e.w}\n` : `${u} ${v}\n`;
         });
       }
       
