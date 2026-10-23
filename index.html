@@ -4,150 +4,88 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>競プロ用 グラフ可視化ツール</title>
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Vis.js Network -->
   <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
-  <!-- FontAwesome Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    #mynetwork {
-      width: 100%;
-      height: calc(100vh - 80px);
-      border: 1px solid #e2e8f0;
-      background-color: #f8fafc;
-    }
+    #mynetwork { width: 100%; height: calc(100vh - 60px); background-color: #f8fafc; outline: none; }
+    .vis-network:focus { outline: none; }
   </style>
 </head>
 <body class="bg-slate-100 text-slate-800 font-sans h-screen flex flex-col">
 
-  <!-- Header -->
-  <header class="bg-slate-900 text-white px-6 py-3 shadow flex justify-between items-center">
-    <div class="flex items-center space-x-3">
-      <i class="fa-solid fa-diagram-project text-indigo-400 text-xl"></i>
-      <h1 class="text-lg font-bold tracking-wide">競プロ グラフ可視化ツール</h1>
-    </div>
-    <div class="text-xs text-slate-400">
-      GitHub Pages Ready
+  <header class="bg-slate-900 text-white px-4 py-2 shadow flex justify-between items-center">
+    <div class="flex items-center space-x-2">
+      <i class="fa-solid fa-diagram-project text-indigo-400"></i>
+      <h1 class="text-md font-bold tracking-wide">競プロ グラフ可視化ツール</h1>
     </div>
   </header>
 
-  <!-- Main Content Area -->
   <div class="flex-1 flex overflow-hidden">
     
-    <!-- Sidebar / Control Panel -->
-    <div class="w-96 bg-white border-r border-slate-200 flex flex-col p-4 space-y-4 overflow-y-auto shadow-sm">
+    <!-- Sidebar -->
+    <div class="w-80 bg-white border-r border-slate-200 flex flex-col p-4 space-y-4 overflow-y-auto shadow-sm text-sm">
       
       <!-- Graph Options -->
-      <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-3 text-xs">
-        <h2 class="font-bold text-slate-700 flex items-center gap-1.5 text-sm">
-          <i class="fa-solid fa-sliders text-indigo-500"></i> 設定
-        </h2>
-
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold mb-1 text-slate-600">辺の種別</label>
-            <select id="graphType" class="w-full border rounded p-1.5 bg-white border-slate-300">
-              <option value="undirected">無向グラフ</option>
-              <option value="directed">有向グラフ</option>
-            </select>
-          </div>
-          <div>
-            <label class="block font-semibold mb-1 text-slate-600">インデックス</label>
-            <select id="indexType" class="w-full border rounded p-1.5 bg-white border-slate-300">
-              <option value="1">1-indexed (1 ~ N)</option>
-              <option value="0">0-indexed (0 ~ N-1)</option>
-            </select>
-          </div>
+      <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2">
+        <h2 class="font-bold text-slate-700"><i class="fa-solid fa-sliders text-indigo-500"></i> 設定</h2>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <select id="graphType" class="border rounded p-1"><option value="undirected">無向グラフ</option><option value="directed">有向グラフ</option></select>
+          <select id="indexType" class="border rounded p-1"><option value="1">1-indexed</option><option value="0">0-indexed</option></select>
         </div>
-
-        <!-- Mode Checkboxes -->
-        <div class="pt-2 border-t border-slate-200 space-y-2">
-          <label class="flex items-center space-x-2 cursor-pointer">
-            <input type="checkbox" id="isParentArrayMode" class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="font-semibold text-slate-700">木 (親配列入力モード)</span>
-          </label>
-          <p class="text-slate-400 text-[11px] pl-5 leading-tight">
-            有効時: 1行目に N、2行目以降に各頂点(2~N)の親 p_2, p_3, ... p_N を入力
-          </p>
-
-          <label class="flex items-center space-x-2 cursor-pointer pt-1">
-            <input type="checkbox" id="isWeightedMode" class="rounded text-indigo-600 focus:ring-indigo-500">
-            <span class="font-semibold text-slate-700">重み付き辺 (u v w)</span>
-          </label>
+        <div class="flex flex-col space-y-1 text-xs mt-2">
+          <label class="flex items-center space-x-1 cursor-pointer"><input type="checkbox" id="isParentArrayMode" class="rounded"><span>木 (親配列入力モード: Nの後にp_i)</span></label>
+          <label class="flex items-center space-x-1 cursor-pointer"><input type="checkbox" id="isWeightedMode" class="rounded"><span>重み付き辺 (u v w)</span></label>
         </div>
       </div>
 
-      <!-- Graph Data Input Area -->
-      <div class="flex-1 flex flex-col space-y-1">
-        <div class="flex justify-between items-center">
-          <label for="graphInput" class="text-sm font-bold text-slate-700">グラフ入力データ</label>
-          <button id="clearBtn" class="text-xs text-red-500 hover:underline">クリア</button>
-        </div>
-        <textarea id="graphInput" class="w-full flex-1 min-h-[150px] p-2.5 font-mono text-sm border rounded-lg border-slate-300 focus:ring-2 focus:ring-indigo-400 focus:outline-none bg-slate-50" placeholder="5 5&#10;1 2&#10;1 3&#10;2 4&#10;3 4&#10;4 5"></textarea>
+      <!-- Textarea -->
+      <div class="flex flex-col space-y-1 flex-1">
+        <div class="flex justify-between items-center text-xs font-bold"><span>入力データ</span><button id="clearBtn" class="text-red-500">クリア</button></div>
+        <textarea id="graphInput" class="w-full flex-1 min-h-[120px] p-2 font-mono text-xs border rounded bg-slate-50" placeholder="5 5&#10;1 2&#10;1 3&#10;2 4&#10;3 4&#10;4 5"></textarea>
       </div>
 
       <!-- Action Buttons -->
       <div class="grid grid-cols-2 gap-2">
-        <button id="renderBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-lg text-sm shadow transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-play"></i> 描画実行
-        </button>
-        <button id="stepAnimBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-lg text-sm shadow transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-film"></i> 辺追加アニメ
-        </button>
+        <button id="renderBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-1.5 rounded text-xs shadow"><i class="fa-solid fa-play"></i> 描画</button>
+        <button id="stepAnimBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-1.5 rounded text-xs shadow"><i class="fa-solid fa-film"></i> アニメ</button>
       </div>
 
-      <!-- Animation Speed Slider -->
-      <div id="animSpeedBox" class="hidden bg-emerald-50 p-2 rounded-lg border border-emerald-200">
-        <div class="flex justify-between text-xs text-emerald-800 mb-1 font-semibold">
-          <span>アニメーション追加間隔</span>
-          <span id="speedVal">500ms</span>
-        </div>
-        <input type="range" id="animSpeed" min="100" max="2000" step="100" value="500" class="w-full accent-emerald-600">
-      </div>
-
-      <!-- Vertex Color Assignment -->
-      <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
-        <label class="text-xs font-bold text-slate-700 block">頂点の色分け (二部グラフ等)</label>
-        <p class="text-[11px] text-slate-400">「頂点番号 色」を改行区切りで入力 (例: 1 red)</p>
-        <textarea id="colorInput" class="w-full h-16 p-2 font-mono text-xs border rounded border-slate-300 bg-white" placeholder="1 #f87171&#10;2 #60a5fa&#10;3 #f87171"></textarea>
-        <button id="applyColorBtn" class="w-full border border-indigo-600 text-indigo-600 hover:bg-indigo-50 font-semibold py-1 rounded text-xs transition">
-          色を反映
-        </button>
-      </div>
-
-      <!-- Random Testcase Generator -->
-      <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 space-y-2">
-        <label class="text-xs font-bold text-slate-700 block">ランダムテストケース生成</label>
-        <div class="flex items-center space-x-2">
-          <span class="text-xs text-slate-600">N &le;</span>
-          <input type="number" id="maxN" value="10" min="2" max="100" class="w-16 border rounded p-1 text-xs text-center border-slate-300 font-bold">
-          <button id="genRandomBtn" class="flex-1 bg-slate-700 hover:bg-slate-800 text-white font-semibold py-1 rounded text-xs transition">
-            ランダム生成
-          </button>
+      <!-- Color Palette -->
+      <div class="bg-slate-50 p-2 rounded border border-slate-200">
+        <span class="text-xs font-bold text-slate-700 block mb-1">頂点カラー変更 (頂点を選択してクリック)</span>
+        <div class="flex gap-2">
+          <button class="w-6 h-6 rounded-full bg-[#4f46e5] border border-[#3730a3]" onclick="applyColor('#4f46e5', '#3730a3')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#ef4444] border border-[#b91c1c]" onclick="applyColor('#ef4444', '#b91c1c')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#10b981] border border-[#047857]" onclick="applyColor('#10b981', '#047857')"></button>
+          <button class="w-6 h-6 rounded-full bg-[#f59e0b] border border-[#b45309]" onclick="applyColor('#f59e0b', '#b45309')"></button>
         </div>
       </div>
 
+      <!-- Random Generator -->
+      <div class="bg-slate-50 p-3 rounded border border-slate-200 space-y-2">
+        <span class="text-xs font-bold text-slate-700 block">ランダム生成</span>
+        <div class="grid grid-cols-2 gap-2 text-xs">
+          <div class="flex items-center space-x-1"><span class="text-slate-600">N&le;</span><input type="number" id="maxN" value="10" min="2" max="100" class="w-full border rounded p-1 text-center"></div>
+          <select id="randomShape" class="border rounded p-1">
+            <option value="general">一般グラフ</option>
+            <option value="tree">木 (Tree)</option>
+            <option value="dag">DAG (閉路なし有向)</option>
+            <option value="bipartite">二部グラフ</option>
+          </select>
+        </div>
+        <button id="genRandomBtn" class="w-full bg-slate-700 hover:bg-slate-800 text-white font-semibold py-1.5 rounded text-xs">ランダムケース生成</button>
+      </div>
     </div>
 
-    <!-- Main Canvas Area -->
+    <!-- Canvas -->
     <div class="flex-1 flex flex-col bg-white">
-      <!-- Status Header -->
-      <div class="bg-slate-100 px-4 py-2 text-xs text-slate-600 border-b border-slate-200 flex justify-between items-center font-semibold">
-        <div>
-          <span>頂点数 (N): <strong id="nodeCount" class="text-indigo-600">0</strong></span>
-          <span class="mx-2">|</span>
-          <span>辺数 (M): <strong id="edgeCount" class="text-indigo-600">0</strong></span>
-        </div>
-        <div class="text-slate-400">
-          <i class="fa-solid fa-hand-pointer"></i> 頂点をドラッグして移動可能
-        </div>
+      <div class="bg-slate-100 px-4 py-1.5 text-xs text-slate-600 border-b flex justify-between">
+        <span>N: <strong id="nodeCount">0</strong> | M: <strong id="edgeCount">0</strong></span>
+        <span>頂点ドラッグで移動 / 複数選択で色変更可能</span>
       </div>
-
-      <!-- Vis.js Container -->
       <div id="mynetwork"></div>
     </div>
-
   </div>
 
   <script>
@@ -156,260 +94,140 @@
     let edgesDataset = new vis.DataSet([]);
     let animTimer = null;
 
-    // Initialize Network
     window.addEventListener('DOMContentLoaded', () => {
       const container = document.getElementById('mynetwork');
-      const data = { nodes: nodesDataset, edges: edgesDataset };
-      const options = {
-        nodes: {
-          shape: 'circle',
-          size: 24,
-          font: { size: 16, color: '#ffffff', face: 'monospace', bold: true },
-          color: {
-            background: '#4f46e5',
-            border: '#3730a3',
-            highlight: { background: '#6366f1', border: '#4338ca' }
-          },
-          shadow: true
-        },
-        edges: {
-          width: 2,
-          color: { color: '#64748b', highlight: '#0284c7' },
-          font: { size: 12, align: 'top' },
-          smooth: { type: 'continuous' }
-        },
-        physics: {
-          enabled: true,
-          solver: 'forceAtlas2Based',
-          forceAtlas2Based: { gravitationalConstant: -50, centralGravity: 0.01, springLength: 90 }
-        },
-        interaction: { dragNodes: true, zoomView: true, dragView: true }
-      };
-      network = new vis.Network(container, data, options);
-
-      // Default sample setup
+      network = new vis.Network(container, { nodes: nodesDataset, edges: edgesDataset }, {
+        nodes: { shape: 'circle', size: 20, font: { size: 14, color: '#fff', bold: true }, color: { background: '#4f46e5', border: '#3730a3' } },
+        edges: { width: 2, color: '#64748b', font: { size: 14, align: 'top', background: 'rgba(255,255,255,0.7)' }, smooth: { type: 'continuous' } },
+        physics: { solver: 'forceAtlas2Based', forceAtlas2Based: { gravitationalConstant: -50, centralGravity: 0.01, springLength: 100 } },
+        interaction: { dragNodes: true, multiselect: true }
+      });
       parseAndRender();
     });
 
-    // Input Parser
+    function applyColor(bg, border) {
+      const selected = network.getSelectedNodes();
+      if (selected.length === 0) return alert("色を変更したい頂点を選択してください");
+      nodesDataset.update(selected.map(id => ({ id, color: { background: bg, border: border } })));
+      network.unselectAll();
+    }
+
     function parseInput() {
-      const text = document.getElementById('graphInput').value.trim();
-      if (!text) return null;
-
-      const lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
-      if (lines.length === 0) return null;
-
-      const isParentArray = document.getElementById('isParentArrayMode').checked;
+      const lines = document.getElementById('graphInput').value.trim().split('\n').map(l => l.trim()).filter(l => l);
+      if (!lines.length) return null;
+      const isParentMode = document.getElementById('isParentArrayMode').checked;
       const isWeighted = document.getElementById('isWeightedMode').checked;
       const isDirected = document.getElementById('graphType').value === 'directed';
-      const indexOffset = parseInt(document.getElementById('indexType').value, 10);
+      const offset = parseInt(document.getElementById('indexType').value, 10);
 
-      let N = 0;
-      let edges = [];
-
-      if (isParentArray) {
-        // --- Parent Array Mode ---
-        // Line 1: N
-        // Following lines/tokens: Parent array p_2, p_3, ... p_N (or p_1 ... p_{N-1})
+      let N = 0, edges = [];
+      if (isParentMode) {
         N = parseInt(lines[0].split(/\s+/)[0], 10);
-        
-        // Collect all remaining tokens as parent values
-        const parentTokens = [];
-        for (let i = 1; i < lines.length; i++) {
-          const parts = lines[i].split(/\s+/).filter(p => p.length > 0);
-          for (let p of parts) {
-            parentTokens.push(parseInt(p, 10));
-          }
-        }
-
-        const startNode = indexOffset === 1 ? 2 : 1;
-        for (let i = 0; i < parentTokens.length && (i + startNode) <= (indexOffset === 1 ? N : N - 1); i++) {
-          const node = i + startNode;
-          const parent = parentTokens[i];
-          edges.push({ u: parent, v: node, w: null });
+        let tokens = lines.slice(1).flatMap(l => l.split(/\s+/)).map(Number);
+        for (let i = 0; i < tokens.length && i + 2 <= N; i++) {
+          edges.push({ u: tokens[i], v: i + (offset ? 2 : 1), w: null });
         }
       } else {
-        // --- Standard Edge List Mode ---
-        const headerParts = lines[0].split(/\s+/).map(Number);
-        N = headerParts[0];
-
+        N = parseInt(lines[0].split(/\s+/)[0], 10);
         for (let i = 1; i < lines.length; i++) {
-          const parts = lines[i].split(/\s+/).map(Number);
-          if (parts.length >= 2) {
-            let u = parts[0];
-            let v = parts[1];
-            let w = isWeighted && parts.length >= 3 ? parts[2] : null;
-            edges.push({ u, v, w });
-          }
+          let p = lines[i].split(/\s+/).map(Number);
+          if (p.length >= 2) edges.push({ u: p[0], v: p[1], w: isWeighted && p.length > 2 ? p[2] : null });
         }
       }
-
-      return { N, edges, isDirected, indexOffset };
+      return { N, edges, isDirected, offset };
     }
 
-    // Render Full Graph
     function parseAndRender() {
       if (animTimer) clearInterval(animTimer);
-      document.getElementById('animSpeedBox').classList.add('hidden');
+      const data = parseInput();
+      if (!data) return;
+      document.getElementById('nodeCount').innerText = data.N;
+      document.getElementById('edgeCount').innerText = data.edges.length;
 
-      const parsed = parseInput();
-      if (!parsed) return;
-
-      const { N, edges, isDirected, indexOffset } = parsed;
-
-      document.getElementById('nodeCount').innerText = N;
-      document.getElementById('edgeCount').innerText = edges.length;
-
-      const nodeArray = [];
-      const startIdx = indexOffset === 1 ? 1 : 0;
-      const endIdx = indexOffset === 1 ? N : N - 1;
-
-      for (let i = startIdx; i <= endIdx; i++) {
-        nodeArray.push({ id: i, label: String(i) });
-      }
-
-      const edgeArray = [];
-      edges.forEach((e, idx) => {
-        edgeArray.push({
-          id: `e_${idx}`,
-          from: e.u,
-          to: e.v,
-          label: e.w !== null ? String(e.w) : "",
-          arrows: isDirected ? 'to' : undefined
-        });
+      let nArr = [], eArr = [];
+      for (let i = data.offset; i < data.N + data.offset; i++) nArr.push({ id: i, label: String(i) });
+      data.edges.forEach((e, i) => {
+        eArr.push({ id: `e${i}`, from: e.u, to: e.v, label: e.w !== null ? String(e.w) : "", arrows: data.isDirected ? 'to' : undefined });
       });
 
-      nodesDataset.clear();
-      edgesDataset.clear();
-      nodesDataset.add(nodeArray);
-      edgesDataset.add(edgeArray);
-      network.stabilize();
+      nodesDataset.clear(); edgesDataset.clear();
+      nodesDataset.add(nArr); edgesDataset.add(eArr);
     }
 
-    // Step-by-Step Animation
-    function renderStepByStep() {
+    document.getElementById('stepAnimBtn').addEventListener('click', () => {
       if (animTimer) clearInterval(animTimer);
-
-      const parsed = parseInput();
-      if (!parsed) return;
-
-      const { N, edges, isDirected, indexOffset } = parsed;
-
-      document.getElementById('nodeCount').innerText = N;
-      document.getElementById('edgeCount').innerText = edges.length;
-
-      const nodeArray = [];
-      const startIdx = indexOffset === 1 ? 1 : 0;
-      const endIdx = indexOffset === 1 ? N : N - 1;
-
-      for (let i = startIdx; i <= endIdx; i++) {
-        nodeArray.push({ id: i, label: String(i) });
-      }
-
-      nodesDataset.clear();
-      edgesDataset.clear();
-      nodesDataset.add(nodeArray);
-
-      document.getElementById('animSpeedBox').classList.remove('hidden');
-
-      let currentEdgeIdx = 0;
-      const speed = parseInt(document.getElementById('animSpeed').value, 10);
-
+      const data = parseInput();
+      if (!data) return;
+      let nArr = [];
+      for (let i = data.offset; i < data.N + data.offset; i++) nArr.push({ id: i, label: String(i) });
+      nodesDataset.clear(); edgesDataset.clear(); nodesDataset.add(nArr);
+      
+      let idx = 0;
       animTimer = setInterval(() => {
-        if (currentEdgeIdx >= edges.length) {
-          clearInterval(animTimer);
-          return;
-        }
-
-        const e = edges[currentEdgeIdx];
-        edgesDataset.add({
-          id: `e_${currentEdgeIdx}`,
-          from: e.u,
-          to: e.v,
-          label: e.w !== null ? String(e.w) : "",
-          arrows: isDirected ? 'to' : undefined,
-          color: { color: '#ef4444' }
-        });
-
-        setTimeout(() => {
-          if (edgesDataset.get(`e_${currentEdgeIdx}`)) {
-            edgesDataset.update({ id: `e_${currentEdgeIdx}`, color: { color: '#64748b' } });
-          }
-        }, speed * 0.8);
-
-        currentEdgeIdx++;
-      }, speed);
-    }
-
-    // Custom Color Assignment
-    document.getElementById('applyColorBtn').addEventListener('click', () => {
-      const text = document.getElementById('colorInput').value.trim();
-      if (!text) return;
-
-      const lines = text.split('\n');
-      lines.forEach(line => {
-        const parts = line.trim().split(/\s+/);
-        if (parts.length >= 2) {
-          const u = Number(parts[0]);
-          const colorStr = parts[1];
-          if (nodesDataset.get(u)) {
-            nodesDataset.update({
-              id: u,
-              color: { background: colorStr, border: colorStr }
-            });
-          }
-        }
-      });
+        if (idx >= data.edges.length) return clearInterval(animTimer);
+        let e = data.edges[idx];
+        edgesDataset.add({ id: `e${idx}`, from: e.u, to: e.v, label: e.w !== null ? String(e.w) : "", arrows: data.isDirected ? 'to' : undefined, color: { color: '#ef4444' } });
+        setTimeout(() => edgesDataset.update({ id: `e${idx}`, color: { color: '#64748b' } }), 400);
+        idx++;
+      }, 500);
     });
 
-    // Random Graph Generator (Pure JS, N <= X)
     document.getElementById('genRandomBtn').addEventListener('click', () => {
       const maxN = parseInt(document.getElementById('maxN').value, 10) || 10;
-      const indexOffset = parseInt(document.getElementById('indexType').value, 10);
-      const isParentArray = document.getElementById('isParentArrayMode').checked;
+      const shape = document.getElementById('randomShape').value;
+      const isWeighted = document.getElementById('isWeightedMode').checked;
+      const isParentMode = document.getElementById('isParentArrayMode').checked;
+      const offset = parseInt(document.getElementById('indexType').value, 10);
+      let isDirected = document.getElementById('graphType').value === 'directed';
 
-      // Random N between 3 and maxN
-      const N = Math.floor(Math.random() * (maxN - 2)) + 3;
-
-      if (isParentArray) {
-        let text = `${N}\n`;
-        const startNode = indexOffset === 1 ? 2 : 1;
-        const parents = [];
-        for (let i = startNode; i < startNode + N - 1; i++) {
-          const parent = Math.floor(Math.random() * (i - (indexOffset === 1 ? 1 : 0))) + (indexOffset === 1 ? 1 : 0);
-          parents.push(parent);
-        }
-        text += parents.join(' ');
-        document.getElementById('graphInput').value = text;
-      } else {
-        const M = Math.floor(Math.random() * (N * 1.5)) + (N - 1);
-        let text = `${N} ${M}\n`;
-        const minIdx = indexOffset === 1 ? 1 : 0;
-        const maxIdx = indexOffset === 1 ? N : N - 1;
-
-        for (let i = 0; i < M; i++) {
-          let u = Math.floor(Math.random() * N) + minIdx;
-          let v = Math.floor(Math.random() * N) + minIdx;
-          while (u === v) {
-            v = Math.floor(Math.random() * N) + minIdx;
-          }
-          text += `${u} ${v}\n`;
-        }
-        document.getElementById('graphInput').value = text.trim();
+      if(shape === 'dag') {
+          isDirected = true; 
+          document.getElementById('graphType').value = 'directed';
       }
 
+      const N = Math.max(3, Math.floor(Math.random() * (maxN - 2)) + 3);
+      let edges = [];
+      
+      if (shape === 'tree') {
+        for (let i = 2; i <= N; i++) edges.push([Math.floor(Math.random() * (i - 1)) + 1, i]);
+      } else if (shape === 'dag') {
+        let possible = [];
+        for (let i = 1; i <= N; i++) for (let j = i + 1; j <= N; j++) possible.push([i, j]);
+        possible.sort(() => Math.random() - 0.5);
+        edges = possible.slice(0, Math.floor(N * 1.5));
+      } else if (shape === 'bipartite') {
+        let g1 = [], g2 = [];
+        for (let i = 1; i <= N; i++) (Math.random() < 0.5 && g1.length < N-1 ? g1 : g2).push(i);
+        if(!g1.length) g1.push(g2.pop());
+        for (let i = 0; i < N * 1.2; i++) {
+          let u = g1[Math.floor(Math.random() * g1.length)], v = g2[Math.floor(Math.random() * g2.length)];
+          if (isDirected && Math.random() < 0.5) [u, v] = [v, u];
+          edges.push([u, v]);
+        }
+      } else {
+        for (let i = 0; i < N * 1.5; i++) {
+          let u = Math.floor(Math.random() * N) + 1, v = Math.floor(Math.random() * N) + 1;
+          if (u !== v) edges.push([u, v]);
+        }
+      }
+
+      let out = "";
+      if (shape === 'tree' && isParentMode) {
+        out = `${N}\n` + edges.map(e => e[0] - 1 + offset).join(' ');
+      } else {
+        out = `${N} ${edges.length}\n`;
+        edges.forEach(e => {
+          let u = e[0] - 1 + offset, v = e[1] - 1 + offset;
+          out += isWeighted ? `${u} ${v} ${Math.floor(Math.random() * 100) + 1}\n` : `${u} ${v}\n`;
+        });
+      }
+      
+      document.getElementById('graphInput').value = out.trim();
       parseAndRender();
     });
 
-    // Event Bindings
     document.getElementById('renderBtn').addEventListener('click', parseAndRender);
-    document.getElementById('stepAnimBtn').addEventListener('click', renderStepByStep);
-    document.getElementById('clearBtn').addEventListener('click', () => {
-      document.getElementById('graphInput').value = "";
-    });
-    document.getElementById('animSpeed').addEventListener('input', (e) => {
-      document.getElementById('speedVal').innerText = `${e.target.value}ms`;
-    });
+    document.getElementById('clearBtn').addEventListener('click', () => document.getElementById('graphInput').value = "");
   </script>
 </body>
 </html>
